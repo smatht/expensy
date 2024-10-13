@@ -1,12 +1,22 @@
+import hashlib
+import os
 from time import sleep
 
-import pandas as pd
-
+from extract.category_inference import macro_inference
 from services.selenium_service import SeleniumService, SeleniumDebuggerDriver
+from django.core.wsgi import get_wsgi_application
 
-# how_to_open_debugging_chrome = "chrome --remote-debugging-port=9222 --user-data-dir=remote-profile"
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "data.settings")
+application = get_wsgi_application()
+from data.models import Records, Categories
+
+# how_to_open_debugging_chrome:
+# chrome --remote-debugging-port=9222 --user-data-dir=remote-profile
 path = "/Users/msticchi/Documents/dev/matias/scraping/chrome-driver"
 web = "https://www.macro.com.ar/bancainternet/#"
+
+def get_record_id(text: str) -> str:
+    return hashlib.sha1(text.encode('ascii')).hexdigest()
 
 
 def extract():
@@ -19,20 +29,21 @@ def extract():
     sleep(10)
     movs = driver.find_elements(by="xpath", value="//tr[@class='evenRow' or @class='oddRow']")
 
-    dic = []
     for mov in movs:
+        description = mov.find_element(by="xpath", value="./td[@headers='_Descripción']").text
+        category_id = macro_inference(description)
+        if category_id == 0:
+            continue
         date = mov.find_element(by="xpath", value="./td[@headers='_Fecha']").text
         transaction_number = mov.find_element(by="xpath", value="./td[@headers='_Nro. transacción']").text
-        description = mov.find_element(by="xpath", value="./td[@headers='_Descripción']").text
         amount = mov.find_element(by="xpath", value="./td[@headers='_Importe']").text
-        dic.append({
-            "date": date,
-            "transaction_number": transaction_number,
-            "description": description,
-            "amount": amount
-        })
-    data = pd.DataFrame(dic)
-    data.to_csv("test.csv")
+        amount = amount.replace("$ ", "").replace(".", "").replace(",", ".")
+
+        record_id = get_record_id(f"{date},{transaction_number},{amount}")
+        category = Categories.objects.get(pk=category_id)
+        record = Records(id=record_id, description=f"{description}. {date}", amount=float(amount), category=category)
+        record.save()
+
 
 if __name__ == '__main__':
     extract()
