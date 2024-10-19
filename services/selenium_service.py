@@ -8,7 +8,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 
 
-
+# how_to_open_debugging_chrome:
+# chrome --remote-debugging-port=9222 --user-data-dir=remote-profile
 DRIVER_PATH = "C:\chrome-win64\chrome.exe"
 
 

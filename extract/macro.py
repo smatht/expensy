@@ -10,8 +10,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "data.settings")
 application = get_wsgi_application()
 from data.models import Records, Categories
 
-# how_to_open_debugging_chrome:
-# chrome --remote-debugging-port=9222 --user-data-dir=remote-profile
 path = "/Users/msticchi/Documents/dev/matias/scraping/chrome-driver"
 web = "https://www.macro.com.ar/bancainternet/#"
 
