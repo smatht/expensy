@@ -10,7 +10,8 @@ from selenium import webdriver
 
 # how_to_open_debugging_chrome:
 # chrome --remote-debugging-port=9222 --user-data-dir=remote-profile
-DRIVER_PATH = "C:\chrome-win64\chrome.exe"
+# "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222 --user-data-dir="C:\remote-profile"
+DRIVER_PATH = "C:\chromedriver.exe"
 
 
 
@@ -45,6 +46,8 @@ class SeleniumDebuggerDriver:
     def __init__(self):
         options = Options()
         options.add_experimental_option("debuggerAddress", "localhost:9222")
+        # options.add_argument("--start-maximized")
+        # options.add_argument("--disable-blink-features=AutomationControlled")
         # service = Service(executable_path=DRIVER_PATH)
         driver = webdriver.Chrome(options=options)
         self.driver = driver
@@ -52,6 +55,9 @@ class SeleniumDebuggerDriver:
 class SeleniumDriver:
 
     def __init__(self):
+        options = Options()
+        options.add_argument("--start-maximized")
+        options.add_argument("--disable-blink-features=AutomationControlled")
         service = Service(executable_path=DRIVER_PATH)
-        driver = webdriver.Chrome()
+        driver = webdriver.Chrome(service=service, options=options)
         self.driver = driver
