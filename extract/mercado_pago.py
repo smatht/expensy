@@ -53,6 +53,7 @@ def extract():
 
     xp_categories = "//ul[@aria-label='Listado de categorías organizadas del mayor al menor gasto.']//li"
     xp_cat_name = ".//span[contains(@class, 'andes-list__item-primary')]"
+
     container_categories = driver.find_elements(By.XPATH, value=xp_categories)
     for i in range(len(container_categories)):
         category_name = container_categories[i].find_element(By.XPATH, value=xp_cat_name).text
@@ -77,5 +78,18 @@ def extract():
         container_categories = driver.find_elements(By.XPATH, value=xp_categories)
 
 
+def extract_category():
+    driver = SeleniumService(SeleniumDebuggerDriver().driver)
+    driver.get(WEB)
+
+    xp_categories = "//ul[@aria-label='Listado de categorías organizadas del mayor al menor gasto.']//li"
+    xp_cat_name = ".//span[contains(@class, 'andes-list__item-primary')]"
+
+    container_categories = driver.find_elements(By.XPATH, value=xp_categories)
+    for category in container_categories:
+        category_name = category.find_element(By.XPATH, value=xp_cat_name).text
+        category_amount =
+
+
 if __name__ == '__main__':
-    extract()
+    extract_category()
