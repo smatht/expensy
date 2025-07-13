@@ -1,10 +1,16 @@
+import os
 from time import sleep
 
+from django.core.wsgi import get_wsgi_application
 from services.selenium_service import SeleniumService, SeleniumDebuggerDriver
 from selenium.webdriver.common.by import By
 
 from utils.date_format import parse_day_month, parse_month_year
 from utils.string_format import parse_amount_to_float
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "data.settings")
+application = get_wsgi_application()
+from data.models import Records, Categories
 
 WEB = "https://www.mercadopago.com.ar/finance/spending-tracking"
 
@@ -35,6 +41,19 @@ def get_id(driver):
     id = driver.find_element(By.XPATH, value=xp_id).text
     return id.strip().split()[-1]
 
+def save(*args, **kwargs):
+    id = kwargs["id"]
+    description = kwargs["description"]
+    amount = kwargs["amount"]
+    category = kwargs["category"]
+    date = kwargs["date"]
+    record = Records(id=id, description=description, amount=float(amount), category=category, date=date)
+    record.save()
+
+def perform_save(id, description, amount, category, date):
+    category_obj = Categories.objects.filter(name__icontains=category).first()
+    save(id=id, description=description, amount=amount, category=category_obj, date=date)
+
 
 def category_detail(category, driver, date):
     xp_cat_name = ".//span[contains(@class, 'andes-list__item-primary')]"
@@ -53,6 +72,7 @@ def category_detail(category, driver, date):
         print(operation_id, action, title, amount, item_date)
         driver.driver.back()  # execute_script("window.history.go(-1)")
         cat_list = driver.find_elements(By.XPATH, value=xp_cat_list)
+        perform_save(operation_id, f"{title} - {action}", amount, category_name, item_date)
 
 
 
