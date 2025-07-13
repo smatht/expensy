@@ -13,6 +13,7 @@ application = get_wsgi_application()
 from data.models import Records, Categories
 
 WEB = "https://www.mercadopago.com.ar/finance/spending-tracking"
+SRC = "mercado pago"
 
 
 def get_action(driver):
@@ -47,7 +48,7 @@ def save(*args, **kwargs):
     amount = kwargs["amount"]
     category = kwargs["category"]
     date = kwargs["date"]
-    record = Records(id=id, description=description, amount=float(amount), category=category, date=date)
+    record = Records(id=id, description=description, amount=float(amount), category=category, date=date, source=SRC)
     record.save()
 
 def perform_save(id, description, amount, category, date):
