@@ -1,5 +1,7 @@
 from datetime import date
 from typing import Dict
+from django.utils.dateparse import parse_date
+
 
 MONTHS: Dict[str, int] = {
     'enero': 1,
@@ -96,3 +98,12 @@ def parse_day_month(input_str: str, year: int = None) -> date:
         return date(year, month_num, day)
     except ValueError as e:
         raise ValueError(f"Invalid date:{e}")
+
+
+def parse_day_month_year(date_str):
+    """
+    Convert format dd/mm/yyyy to yyyy-mm-dd
+    """
+    parts = date_str.split('/')
+    date_iso = f"{parts[2]}-{parts[1]}-{parts[0]}"
+    return parse_date(date_iso)
