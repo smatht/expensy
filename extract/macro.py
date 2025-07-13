@@ -2,7 +2,7 @@ import hashlib
 import os
 from time import sleep
 
-from extract.category_inference import macro_inference
+from utils.category_inference import macro_inference
 from services.selenium_service import SeleniumService, SeleniumDebuggerDriver
 from django.core.wsgi import get_wsgi_application
 
