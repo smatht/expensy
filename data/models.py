@@ -16,8 +16,9 @@ class Records(models.Model):
     date = models.DateField(null=True, blank=True)
     time = models.TimeField(null=True, blank=True)
     category = models.ForeignKey(Categories, null=True, blank=True, on_delete=models.CASCADE)
-    amount = models.DecimalField(decimal_places=2)
+    amount = models.DecimalField(decimal_places=2, max_digits=8)
     sync = models.BooleanField(default=False)
+    source = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
         db_table = 'records'

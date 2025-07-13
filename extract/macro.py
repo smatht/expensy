@@ -14,6 +14,7 @@ from data.models import Records, Categories
 
 path = "/Users/msticchi/Documents/dev/matias/scraping/chrome-driver"
 web = "https://www.macro.com.ar/bancainternet/#"
+SRC = "macro"
 
 def get_record_id(text: str) -> str:
     return hashlib.sha1(text.encode('ascii')).hexdigest()
@@ -43,7 +44,7 @@ def extract():
         record_id = get_record_id(f"{date},{transaction_number},{amount}")
         category = Categories.objects.get(pk=category_id)
         record = Records(id=record_id, description=f"{description}. {date}", amount=float(amount), category=category,
-                         date=date_obj)
+                         date=date_obj, source=SRC)
         record.save()
 
 
