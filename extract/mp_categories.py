@@ -34,7 +34,7 @@ def get_amount(driver):
 def get_date(driver, date):
     xp_day_month = ".//p[@class='ui-rowfeed-date']"
     str_date = driver.find_element(By.XPATH, value=xp_day_month).text
-    cur_date = parse_day_month(str_date, date.year)
+    cur_date = parse_day_month(str_date, date.year, date.month)
     return cur_date
 
 def get_id(driver):
