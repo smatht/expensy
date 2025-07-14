@@ -61,7 +61,7 @@ def parse_month_year(input_str: str) -> date:
     return date(year, month_num, 1)
 
 
-def parse_day_month(input_str: str, year: int = None) -> date:
+def parse_day_month(input_str: str, year: int = None, month: int = None) -> date:
     """
     Parse a string in the form "<day>/<Spanish_month_abbreviation>" and return
     a date object for that day and month. If year is not provided, uses current year.
@@ -74,6 +74,9 @@ def parse_day_month(input_str: str, year: int = None) -> date:
     """
     if year is None:
         year = date.today().year
+
+    if month:
+        month_num = month
 
     if "hs" in input_str:
         return date.today()
@@ -91,13 +94,16 @@ def parse_day_month(input_str: str, year: int = None) -> date:
         raise ValueError(f"Invalid day value: {day_str!r}")
 
     # Buscar mes abreviado
-    month_num = MONTH_ABBREVIATIONS.get(month_str.lower())
-    if month_num is None:
-        raise ValueError(f"Unknown month abbreviation: {month_str!r}")
+    if not month_num:
+        month_num = MONTH_ABBREVIATIONS.get(month_str.lower())
+        if month_num is None:
+            raise ValueError(f"Unknown month abbreviation: {month_str!r}")
+
     try:
         return date(year, month_num, day)
     except ValueError as e:
-        raise ValueError(f"Invalid date:{e}")
+        print(f"ERROR: Invalid date:{e}")
+        return date(year, month_num, 1)
 
 
 def parse_day_month_year(date_str):
