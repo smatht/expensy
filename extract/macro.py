@@ -43,9 +43,12 @@ def extract():
 
         record_id = get_record_id(f"{date},{transaction_number},{amount}")
         category = Categories.objects.get(pk=category_id)
-        record = Records(id=record_id, description=f"{description}. {date}", amount=float(amount), category=category,
-                         date=date_obj, source=SRC)
-        record.save()
+        try:
+            Records.objects.get(pk=record_id)
+        except Records.DoesNotExist:
+            record = Records(id=record_id, description=f"{description}. {date}", amount=float(amount), category=category,
+                             date=date_obj, source=SRC)
+            record.save()
 
 
 if __name__ == '__main__':

@@ -48,8 +48,11 @@ def save(*args, **kwargs):
     amount = kwargs["amount"]
     category = kwargs["category"]
     date = kwargs["date"]
-    record = Records(id=id, description=description, amount=float(amount), category=category, date=date, source=SRC)
-    record.save()
+    try:
+        Records.objects.get(pk=id)
+    except Records.DoesNotExist:
+        rec = Records(id=id, description=description, amount=float(amount), category=category, date=date, source=SRC)
+        rec.save()
 
 def perform_save(id, description, amount, category, date):
     category_obj = Categories.objects.filter(name__icontains=category).first()
