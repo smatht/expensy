@@ -1,15 +1,24 @@
+"""String formatting utilities for amount parsing."""
+
 import re
+from typing import Union
 
 
-def parse_amount_to_float(amount_str):
+def parse_amount_to_float(amount_str: Union[str, None]) -> float:
     """
-    Converts a Spanish natural language amount string to float.
+    Convert a Spanish natural language amount string to float.
+
+    This function parses Spanish currency strings in the format:
+    "[sign][amount] pesos [con [amount] centavos]"
 
     Args:
-        amount_str (str): Amount string (e.g., '-8868 pesos con 06 centavos')
+        amount_str: Amount string (e.g., '-8868 pesos con 06 centavos')
 
     Returns:
-        float: The numeric value of the amount
+        The numeric value of the amount as float
+
+    Raises:
+        ValueError: If the amount string format is invalid
 
     Examples:
         >>> parse_amount_to_float('-8868 pesos con 06 centavos')
@@ -18,6 +27,10 @@ def parse_amount_to_float(amount_str):
         -3559.69
         >>> parse_amount_to_float('-828200 pesos')
         -828200.0
+        >>> parse_amount_to_float('')
+        0.0
+        >>> parse_amount_to_float(None)
+        0.0
     """
     if not amount_str or not isinstance(amount_str, str):
         return 0.0
