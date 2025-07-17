@@ -25,12 +25,13 @@ SECRET_KEY = "django-insecure-+kzii45rsyxxzxg+4li3ocf4)pfw7ew2)mzur64r1*ng4=vyun
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    #"unfold",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -105,7 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "es-AR"
 
 TIME_ZONE = "UTC"
 
@@ -123,3 +124,9 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+UNFOLD = {
+    "SITE_TITLE": "Custom suffix in <title> tag",
+    "SITE_HEADER": "Expensy admin",
+    "SITE_SUBHEADER": "Panel de administración",
+}
