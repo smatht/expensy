@@ -8,11 +8,16 @@ authors = ["Matias G. Sticchi <matgs656@gmail.com>"]
 python = "^3.9"
 selenium = "^4.25.0"
 pandas = "^2.2.3"
-psycopg2 = "^2.9.9"
 django = "4.2"
 gspread = "^6.2.1"
+django-unfold = "^0.62.0"
 
 [tool.poetry.dev-dependencies]
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+pylint = "^3.3.7"
+flake8 = "^7.3.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
