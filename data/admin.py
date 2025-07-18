@@ -27,6 +27,8 @@ class RecordsAdmin(admin.ModelAdmin):
     date_hierarchy = 'date'
     list_per_page = 25
     ordering = ('-date',)
+    readonly_fields = ("id",)
+    exclude = ("id",)
 
     fieldsets = (
         ('Información básica', {

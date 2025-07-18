@@ -61,5 +61,5 @@ def load_records_to_sheet() -> None:
         sync_record(record[0])
 
 
-if __name__ == '_main_':
+if __name__ == '__main__':
     load_records_to_sheet()
