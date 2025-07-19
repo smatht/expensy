@@ -188,6 +188,7 @@ def category_detail(category: WebElement, driver, date) -> None:
 
         # Click to get operation details
         cat_list[item].click()
+        sleep(1)
         operation_id = get_id(driver)
 
         print(operation_id, action, title, amount, item_date)
