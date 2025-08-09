@@ -11,7 +11,7 @@ pandas = "^2.2.3"
 django = "4.2"
 gspread = "^6.2.1"
 django-unfold = "^0.62.0"
-psycopg2 = "^2.9.10"
+psycopg2-binary = "2.9.10"
 
 [tool.poetry.dev-dependencies]
 

@@ -195,6 +195,7 @@ def category_detail(category: WebElement, driver, date) -> None:
 
         # Navigate back and refresh list
         driver.driver.back()
+        sleep(1)
         cat_list = driver.find_elements(By.XPATH, value=xp_cat_list)
 
         # Save the transaction
