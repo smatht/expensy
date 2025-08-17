@@ -49,3 +49,14 @@ class RecordsListSerializer(serializers.ModelSerializer):
             "sync",
             "source",
         ]
+
+
+class CategoryReportSerializer(serializers.Serializer):
+    """Serializer para el reporte de categorías por mes"""
+
+    month = serializers.IntegerField()
+    year = serializers.IntegerField()
+    categories = serializers.DictField(
+        child=serializers.DecimalField(max_digits=10, decimal_places=2)
+    )
+    total = serializers.DecimalField(max_digits=10, decimal_places=2)
