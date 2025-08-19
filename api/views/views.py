@@ -109,6 +109,19 @@ class RecordsViewSet(viewsets.ModelViewSet):
     serializer_class = RecordsSerializer
     permission_classes = []
 
+    def filter_queryset(self, queryset):
+        queryset = super().filter_queryset(queryset)
+
+        # Sync field filter (true or false) (1 or 0)
+        str_sync = self.request.query_params.get("sync")
+        sync = True if str_sync == "true" else False if str_sync == "false" else None
+        if sync is None:
+            sync = True if str_sync == "1" else False if str_sync == "0" else None
+        if sync is not None:
+            queryset = queryset.filter(sync=sync)
+
+        return queryset
+
     def get_serializer_class(self):
         """Returns the appropriate serializer based on the action"""
         if self.action == "list":
