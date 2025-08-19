@@ -9,6 +9,7 @@ from api.serializers.models import (
     RecordsSerializer,
     RecordsListSerializer,
     CategoryReportSerializer,
+    RecordsBulkSyncSerializer,
 )
 from django.db.models import Sum
 from django.utils import timezone
@@ -42,7 +43,6 @@ class CategoriesViewSet(viewsets.ModelViewSet):
         try:
             month = int(month)
             year = int(year)
-
 
             # Validate month range
             if month < 1 or month > 12:
@@ -147,4 +147,37 @@ class RecordsViewSet(viewsets.ModelViewSet):
 
         return Response(
             {"count": len(recent_records), "size": size, "results": serializer.data}
+        )
+
+    @action(detail=False, methods=["post"], url_path="bulk-sync")
+    def bulk_sync(self, request):
+        """
+        Marca múltiples records como sincronizados (sync=True).
+
+        Recibe una lista de IDs de records y los marca como sincronizados
+        en una sola operación.
+        """
+        serializer = RecordsBulkSyncSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        record_ids = serializer.validated_data["record_ids"]
+
+        # Obtener los records que no están ya sincronizados
+        records_to_update = Records.objects.filter(id__in=record_ids, sync=False)
+
+        # Contar cuántos records se van a actualizar
+        records_count = records_to_update.count()
+
+        # Actualizar todos los records como sincronizados
+        records_to_update.update(sync=True)
+
+        return Response(
+            {
+                "message": f"Se marcaron {records_count} records como sincronizados",
+                "updated_count": records_count,
+                "total_requested": len(record_ids),
+            },
+            status=status.HTTP_200_OK,
         )

@@ -51,6 +51,34 @@ class RecordsListSerializer(serializers.ModelSerializer):
         ]
 
 
+class RecordsBulkSyncSerializer(serializers.Serializer):
+    """Serializer para operación bulk de sincronización de records"""
+
+    record_ids = serializers.ListField(
+        child=serializers.CharField(max_length=40),
+        min_length=1,
+        max_length=1000,
+        help_text=("Lista de IDs de records a marcar como sincronizados"),
+    )
+
+    def validate_record_ids(self, value):
+        """Validar que los IDs existen en la base de datos"""
+        from data.models import Records
+
+        # Verificar que todos los IDs existen
+        existing_ids = set(
+            Records.objects.filter(id__in=value).values_list("id", flat=True)
+        )
+        invalid_ids = set(value) - existing_ids
+
+        if invalid_ids:
+            raise serializers.ValidationError(
+                f"Los siguientes IDs no existen: {list(invalid_ids)}"
+            )
+
+        return value
+
+
 class CategoryReportSerializer(serializers.Serializer):
     """Serializer para el reporte de categorías por mes"""
 
