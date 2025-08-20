@@ -1,7 +1,13 @@
 """Google Sheets service for reading and writing data."""
 
+import os
+import base64
+import json
 import gspread
 import pandas as pd
+
+from google.oauth2.service_account import Credentials
+from google.auth import default
 from typing import List, Optional
 
 
@@ -18,11 +24,23 @@ class GoogleSheet:
         Initialize Google Sheets connection.
 
         Args:
-            file_name: Path to the service account JSON file
+            file_name: Path to the service account JSON file (can be None for GCP)
             document: Google Sheets document name or ID
             sheet_name: Name of the specific worksheet to work with
         """
-        service_account = gspread.service_account(filename=file_name)
+        if file_name:
+            # Use service account file
+            service_account = gspread.service_account(filename=file_name)
+        else:
+            # Use default credentials (for Google Cloud Functions)
+            sa_b64 = os.environ["sa"]
+            sa_json = base64.b64decode(sa_b64).decode("utf-8")
+            sa_info = json.loads(sa_json)
+
+            SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
+            cred = Credentials.from_service_account_info(sa_info, scopes=SCOPES)
+            service_account = gspread.authorize(cred)
+
         sheet = service_account.open(document)
         self.sheet = sheet.worksheet(sheet_name)
         self.df_all_records: Optional[pd.DataFrame] = None
